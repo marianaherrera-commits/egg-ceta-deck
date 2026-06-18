@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Egg — Para Grupo CETA</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400&family=Space+Grotesk:wght@300;400;500;600;700&family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --beige-01:#f7f5f2; --beige-02:#ece7e6; --beige-03:#bbbab2; --beige-04:#8d877c;
+  --black:#1b1b1b; --grey-01:#d2d2d2; --grey-02:#4c4b4b; --grey-03:#353434;
+  --white:#ffffff; --rose:#ff647c; --yellow:#ffcd00;
+  --grad:linear-gradient(100deg,#1b1b1b 0%,#ff647c 45%,#ffcd00 85%);
+  --grad-ry:linear-gradient(100deg,#ff647c 0%,#ffcd00 75%);
+  --font:"Plus Jakarta Sans",system-ui,sans-serif;
+  --mono:"Space Grotesk",system-ui,sans-serif;
+  --ease:cubic-bezier(0.16,1,0.3,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;-webkit-font-smoothing:antialiased;}
+body{font-family:var(--font);background:var(--black);height:100vh;width:100vw;}
+
+/* ── DECK ── */
+.deck{width:100%;height:100vh;position:relative;}
+.slide{
+  position:absolute;
+  top:68px;left:0;right:0;bottom:82px;
+  padding:0 88px;
+  display:flex;flex-direction:column;justify-content:center;
+  opacity:0;pointer-events:none;
+  transform:translateY(14px);
+  transition:opacity 480ms var(--ease),transform 480ms var(--ease);
+  overflow:hidden;
+}
+.slide.active{opacity:1;pointer-events:all;transform:translateY(0);}
+.slide.exit{opacity:0;transform:translateY(-10px);transition-duration:260ms;}
+
+/* ── CHROME ── */
+.chrome{
+  position:fixed;top:0;left:0;right:0;height:60px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 44px;z-index:500;
+  background:linear-gradient(180deg,rgba(20,20,20,0.5) 0%,transparent 100%);pointer-events:none;
+}
+/* The Egg SVG logo — st1+st3 fill changes per theme */
+.logo-svg{height:30px;width:auto;display:block;transition:all 300ms;}
+
+
+/* egg mark & lightning always same */
+.logo-svg .st2 { fill:#ffcd00; }
+.logo-svg .st4 { fill:#ffcd00; opacity:.3; }
+.logo-svg .st0 { opacity:0; }
+
+.counter{
+  font-family:var(--mono);font-size:11px;font-weight:500;letter-spacing:0.1em;
+  transition:color 300ms;pointer-events:all;
+}
+
+/* ── NAV ── */
+.nav{
+  position:fixed;bottom:0;left:0;right:0;height:76px;
+  display:flex;align-items:center;justify-content:center;gap:12px;z-index:500;
+}
+.nav-btn{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:0.09em;text-transform:uppercase;
+  padding:9px 20px;border-radius:999px;cursor:pointer;
+  border:1px solid var(--grey-02);background:rgba(27,27,27,.82);
+  backdrop-filter:blur(12px);color:var(--beige-04);
+  transition:all 240ms var(--ease);
+}
+.nav-btn:hover{color:var(--white);border-color:var(--grey-03);}
+.nav-btn.next{background:var(--beige-01);color:var(--black);border-color:var(--beige-01);}
+.nav-btn.next:hover{background:var(--white);}
+.nav-btn:disabled{opacity:.2;cursor:default;}
+.dots{display:flex;gap:6px;align-items:center;}
+.dot{width:5px;height:5px;border-radius:999px;background:var(--grey-02);cursor:pointer;transition:all 340ms var(--ease);}
+.dot.active{width:18px;background:var(--beige-03);}
+
+/* ── SHARED ── */
+.tag{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:0.16em;text-transform:uppercase;
+  background:var(--grad-ry);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:16px;display:inline-block;
+}
+
+/* ════ S1 — COVER ════ */
+.s1{background:var(--black);}
+.s1 .eyebrow{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--grey-02);margin-bottom:22px;
+}
+.s1 .hl{
+  font-family:var(--font);font-size:clamp(34px,4.6vw,60px);
+  font-weight:700;line-height:1.02;letter-spacing:-0.03em;
+  color:var(--white);max-width:760px;margin-bottom:16px;
+}
+.s1 .hl em{
+  font-style:normal;
+  background:var(--grad-ry);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.s1 .sub{
+  font-family:var(--font);font-size:15px;color:var(--beige-04);
+  max-width:440px;line-height:1.6;margin-bottom:28px;
+}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--grey-02);padding-top:20px;}
+.stat{padding-right:24px;}
+.stat:not(:last-child){border-right:1px solid var(--grey-02);margin-right:24px;}
+.stat-n{
+  font-family:var(--mono);font-size:clamp(22px,2.6vw,32px);font-weight:300;
+  line-height:1;letter-spacing:-0.04em;
+  background:var(--grad-ry);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  display:block;margin-bottom:7px;
+}
+.stat-l{font-family:var(--font);font-size:12px;font-weight:400;color:var(--beige-04);line-height:1.45;}
+
+/* ════ S2 — TECNOLOGÍA ════ */
+.s2{background:var(--beige-01);}
+.s2 .hl{
+  font-family:var(--font);font-size:clamp(26px,2.9vw,38px);
+  font-weight:700;line-height:1.08;letter-spacing:-0.025em;
+  color:var(--black);max-width:560px;margin-bottom:12px;
+}
+.s2 .body{
+  font-family:var(--font);font-size:14px;line-height:1.65;
+  color:var(--beige-04);max-width:600px;margin-bottom:16px;
+}
+.pills{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:22px;}
+.pill{
+  font-family:var(--mono);font-size:10px;font-weight:600;
+  letter-spacing:0.1em;text-transform:uppercase;
+  padding:6px 14px;border-radius:999px;
+  background:var(--black);color:var(--yellow);border:1px solid var(--black);
+}
+.tech-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.tech-card{background:var(--black);border-radius:14px;padding:18px 18px 16px;}
+.tc-label{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;
+  background:var(--grad-ry);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  margin-bottom:8px;display:block;
+}
+.tc-title{font-family:var(--font);font-size:14px;font-weight:700;color:var(--white);margin-bottom:5px;line-height:1.2;}
+.tc-desc{font-family:var(--font);font-size:12px;color:var(--beige-04);line-height:1.5;}
+.s2 .footnote{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:0.06em;color:var(--beige-03);margin-top:14px;
+}
+
+/* ════ S3 — CLIENTES ════ */
+.s3{background:var(--black);}
+.s3 .hl{
+  font-family:var(--font);font-size:clamp(28px,3.2vw,44px);
+  font-weight:700;line-height:1.05;letter-spacing:-0.025em;
+  color:var(--white);max-width:600px;margin-bottom:8px;
+}
+.s3 .sub{font-family:var(--font);font-size:14px;color:var(--beige-04);margin-bottom:28px;line-height:1.5;}
+.clients-main{display:flex;gap:10px;margin-bottom:10px;}
+.clients-sec{display:flex;gap:10px;}
+.client-cell{
+  flex:1;border:1px solid var(--grey-02);border-radius:12px;
+  display:flex;align-items:center;justify-content:center;
+  background:rgba(255,255,255,.02);transition:background 220ms var(--ease);
+  min-height:80px;padding:18px 20px;
+}
+.client-cell:hover{background:rgba(255,255,255,.06);}
+.client-cell.sm{min-height:54px;padding:12px 18px;flex:0.65;}
+
+/* Client name cells */
+.cname{
+  font-family:var(--mono);font-weight:500;font-size:14px;
+  letter-spacing:0.04em;color:var(--beige-03);text-align:center;
+}
+.cname.big{
+  font-family:var(--font);font-weight:600;font-size:17px;
+  letter-spacing:-0.01em;color:var(--beige-01);
+}
+
+/* ════ S4 — PARA CETA ════ */
+.s4{background:var(--beige-01);}
+.s4 .hl{
+  font-family:var(--font);font-size:clamp(28px,3.2vw,44px);
+  font-weight:700;line-height:1.08;letter-spacing:-0.025em;
+  color:var(--black);max-width:680px;margin-bottom:8px;
+}
+.s4 .sub{font-family:var(--font);font-size:15px;color:var(--beige-04);margin-bottom:28px;line-height:1.5;}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+.card{background:var(--white);border:1px solid var(--grey-01);border-radius:16px;padding:22px 20px 20px;display:flex;flex-direction:column;gap:8px;}
+.card-num{
+  font-family:var(--mono);font-size:10px;font-weight:700;
+  letter-spacing:0.16em;text-transform:uppercase;
+  background:var(--grad-ry);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.card-title{font-family:var(--font);font-size:17px;font-weight:700;color:var(--black);line-height:1.15;letter-spacing:-0.02em;}
+.card-body{font-family:var(--font);font-size:13px;color:var(--beige-04);line-height:1.65;}
+.card-body strong{color:var(--black);font-weight:600;}
+
+/* ════ S5 — CIERRE ════ */
+.s5{background:var(--black);}
+.s5 .eyebrow{
+  font-family:var(--mono);font-size:10px;font-weight:500;
+  letter-spacing:0.14em;text-transform:uppercase;
+  color:var(--grey-02);margin-bottom:40px;
+}
+.s5 .hl{
+  font-family:var(--font);font-size:clamp(42px,5.4vw,70px);
+  font-weight:700;line-height:1.02;letter-spacing:-0.03em;
+  color:var(--white);margin-bottom:28px;
+}
+.s5 .hl em{
+  font-style:italic;font-weight:300;
+  background:var(--grad-ry);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+}
+.s5 a.cta{
+  font-family:var(--mono);font-size:15px;font-weight:500;
+  color:var(--beige-01);text-decoration:none;display:inline-block;
+  border-bottom:1px solid var(--grey-02);padding-bottom:3px;margin-bottom:44px;
+  transition:border-color 220ms;
+}
+.s5 a.cta:hover{border-color:var(--beige-03);}
+.s5 .footnote{
+  font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:0.03em;
+  color:var(--grey-02);max-width:460px;line-height:1.75;
+  border-top:1px solid var(--grey-02);padding-top:24px;
+}
+</style>
+</head>
+<body class="theme-dark">
+
+<!-- CHROME -->
+<div class="chrome">
+  <!-- Egg logo SVG inline — st1+st3 colors switch via CSS body class -->
+  <svg class="logo-svg" id="Capa_1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 130 65">
+    <defs><style>
+      .st0{opacity:0;fill-rule:evenodd;}
+      .st1{fill:#ffffff;fill-rule:evenodd;}
+      .st2{fill:#ffcd00;fill-rule:evenodd;}
+      .st3{fill:#ffffff;}
+      .st4{fill:#ffcd00;opacity:.3;}
+    </style></defs>
+    <g>
+      <path class="st3" d="M78.1,34.7s0,0,0,0"/>
+      <path class="st3" d="M71.4,33.6h-22.7c.2,2.9,1.1,5.2,2.9,7,1.8,1.8,4,2.7,6.8,2.7s3.8-.5,5.4-1.6c1.5-1.1,2.6-2.4,3.2-4.2h4c-.8,2.7-2.3,4.9-4.6,6.6-2.2,1.7-4.9,2.5-8,2.5s-7.4-1.4-9.8-4.2c-2.4-2.8-3.6-6.2-3.6-10.2s1.2-7.3,3.7-10.1c2.5-2.8,5.7-4.2,9.7-4.2s7.2,1.3,9.5,4c2.4,2.7,3.6,6,3.6,9.9v1.4ZM58.3,21.6c-2.6,0-4.7.8-6.4,2.5-1.7,1.7-2.7,3.8-3.1,6.4h18.8c-.3-2.7-1.2-4.8-2.9-6.4-1.7-1.6-3.8-2.4-6.5-2.4Z"/>
+      <path class="st1" d="M129.9,30.5h-12.2c-3.8,0-2.9,3.1-2.9,3.1h11.3s0,0,0,0h0v.9h0c-.3,2.7-1.2,4.8-2.9,6.4-1.7,1.6-3.8,2.4-6.5,2.4s-4.7-.8-6.4-2.5c-1.7-1.7-2.7-3.8-3.1-6.4h0c0-.6-.1-1.3-.1-2s0-.8,0-1.1h0c.2-2.9,1.1-5.2,2.9-7,1.8-1.8,4-2.7,6.8-2.7s3.8.5,5.4,1.6c1.3.9,2.2,1.9,2.8,3.2h4c-.9-2.3-2.3-4.2-4.2-5.7-2.2-1.7-4.9-2.5-8-2.5s-7.4,1.4-9.8,4.2c-2.4,2.8-3.6,6.2-3.6,10.2s1.2,7.3,3.7,10.1c2.5,2.8,5.7,4.2,9.7,4.2s7.2-1.3,9.5-4c2-2.3,3.2-5,3.5-8.3h0v-.9c0-.5,0-1.1,0-1.7v-1.4Z"/>
+      <path class="st1" d="M100.6,30.5h-12.2c-3.8,0-2.9,3.1-2.9,3.1h11.3s0,0,0,0h0v.9h0c-.3,2.7-1.2,4.8-2.9,6.4-1.7,1.6-3.8,2.4-6.5,2.4s-4.7-.8-6.4-2.5c-1.7-1.7-2.7-3.8-3.1-6.4h0c0-.6-.1-1.3-.1-2s0-.8,0-1.1h0c.2-2.9,1.1-5.2,2.9-7,1.8-1.8,4-2.7,6.8-2.7s3.8.5,5.4,1.6c1.3.9,2.2,1.9,2.8,3.2h4c-.9-2.3-2.3-4.2-4.2-5.7-2.2-1.7-4.9-2.5-8-2.5s-7.4,1.4-9.8,4.2c-2.4,2.8-3.6,6.2-3.6,10.2s1.2,7.3,3.7,10.1c2.5,2.8,5.7,4.2,9.7,4.2s7.2-1.3,9.5-4c2-2.3,3.2-5,3.5-8.3h0v-.9c0-.5,0-1.1,0-1.7v-1.4Z"/>
+    </g>
+    <g>
+      <path class="st2" d="M18.3,6.8c-16.5,0-31.1,51.3,0,51.3s16.5-51.2,0-51.3Z"/>
+      <path class="st0" d="M27.8,31.2l-10.6,15.1c-.4.5-1.2.2-1.1-.4l1.9-9.6h-6.5c-.5,0-1.1-.7-.5-1.5l10.6-14.8c.4-.5,1.1-.2,1.1.4l-1.3,10.3,5.9-.4c.5,0,.8.5.5.9Z"/>
+      <path class="st1" d="M26.6,30.5l-10.6,15.1c-.4.5-1.2.2-1.1-.4l1.9-10.2h-6.5c-.5,0-.8-.5-.5-.9l10.6-14.8c.4-.5,1.1-.2,1.1.4l-1.3,10.3,5.9-.4c.5,0,.8.5.5.9Z"/>
+      <path class="st4" d="M21.5,19.7c0-.6-.7-.9-1.1-.4l-10.6,14.8c-.3.4,0,.9.5.9h.5l10.6-14.9v-.4Z"/>
+    </g>
+  </svg>
+  <span class="counter" id="counter">1 / 5</span>
+</div>
+
+<div class="deck">
+
+  <!-- ━━ 1 ━━ -->
+  <div class="slide s1 active" data-theme="dark">
+    <p class="eyebrow">Para Grupo CETA · Confidencial</p>
+    <h1 class="hl">Transformamos personas.<br>Con resultados <em>probados.</em><br>A cualquier escala.</h1>
+    <p class="sub">No es e-learning. No son cursos. Es una tecnología de cooperación humana, con base científica y 5 millones de sesiones de evidencia.</p>
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-n">5M+</span>
+        <span class="stat-l">sesiones sincrónicas<br>registradas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">500K</span>
+        <span class="stat-l">personas formadas<br>con la metodología</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">+80%</span>
+        <span class="stat-l">de éxito en adopción<br>de nuevas prácticas</span>
+      </div>
+      <div class="stat">
+        <span class="stat-n">+90%</span>
+        <span class="stat-l">de satisfacción<br>de participantes</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ━━ 2 ━━ -->
+  <div class="slide s2" data-theme="light">
+    <span class="tag">La tecnología</span>
+    <h2 class="hl">No es una plataforma.<br>Es un sistema que<br>garantiza cooperación.</h2>
+    <p class="body">La Inteligencia de la Cooperación (IC) es la tecnología propia de Egg. Está basada en la ciencia de la cooperación, del comportamiento humano y del aprendizaje, y garantiza la misma calidad de experiencia a cualquier escala. Cada componente existe por una razón científica, documentada en más de 5 millones de sesiones. Cuando se respetan, la calidad no es una promesa — es un resultado.</p>
+    <div class="pills">
+      <span class="pill">Aprender haciendo</span>
+      <span class="pill">Equipos rotativos</span>
+      <span class="pill">Autonomía guiada</span>
+      <span class="pill">Participación distribuida</span>
+      <span class="pill">Escalabilidad fractal</span>
+    </div>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <span class="tc-label">Sincrónica</span>
+        <div class="tc-title">Cooperación en tiempo real</div>
+        <div class="tc-desc">Equipos rotativos que aprenden juntos. La interacción entre pares genera el aprendizaje, no el contenido.</div>
+      </div>
+      <div class="tech-card">
+        <span class="tc-label">Fractal</span>
+        <div class="tc-title">Misma calidad, cualquier escala</div>
+        <div class="tc-desc">20 personas o 2.000 simultáneas: la experiencia es idéntica. La metodología escala, la logística no.</div>
+      </div>
+      <div class="tech-card">
+        <span class="tc-label">Autónoma</span>
+        <div class="tc-title">Sin facilitadores humanos</div>
+        <div class="tc-desc">El grupo se autogestiona. Diseñado desde el principio para funcionar sin intervención externa.</div>
+      </div>
+    </div>
+    <p class="footnote">Publicado en literatura científica · Tecnología patentable · 5 años de iteración operativa</p>
+  </div>
+
+  <!-- ━━ 3 ━━ -->
+  <div class="slide s3" data-theme="dark">
+    <span class="tag">Quiénes confían en Egg</span>
+    <h2 class="hl">Los equipos que eligen Egg<br>no vuelven a elegir otra cosa.</h2>
+    <p class="sub">Empresas líderes en sectores clave, con equipos distribuidos y exigencia de resultados medibles.</p>
+
+    <div class="clients-main">
+      <div class="client-cell"><span class="cname big">Mercado Libre</span></div>
+      <div class="client-cell"><span class="cname big">Globant</span></div>
+      <div class="client-cell"><span class="cname big">Telefónica España</span></div>
+    </div>
+    <div class="clients-sec">
+      <div class="client-cell sm"><span class="cname">Banco Santander</span></div>
+      <div class="client-cell sm"><span class="cname">INEFOP</span></div>
+    </div>
+  </div>
+
+  <!-- ━━ 4 ━━ -->
+  <div class="slide s4" data-theme="light">
+    <span class="tag">Para Grupo CETA</span>
+    <h2 class="hl">Tres cosas concretas<br>que cambian con Egg.</h2>
+    <p class="sub">La capacidad de llevar transformación real a cualquier punto de tu operación.</p>
+    <div class="cards">
+      <div class="card">
+        <div class="card-num">01</div>
+        <h3 class="card-title">Tu red, sin límite de escala</h3>
+        <p class="card-body">Tienen presencia en toda la región. Egg garantiza <strong>la misma calidad de formación en cada punto</strong>, sin mover formadores, sin depender del nodo local. Lo que escala es la metodología, no la logística.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">02</div>
+        <h3 class="card-title">Evidencia real,<br>no horas de capacitación</h3>
+        <p class="card-body">Tus clientes hoy reciben un certificado. Con Egg, reciben <strong>datos de cooperación, adopción de prácticas y participación por sesión</strong>. Eso convierte la formación en un argumento de renovación.</p>
+      </div>
+      <div class="card">
+        <div class="card-num">03</div>
+        <h3 class="card-title">Innovación que<br>se puede demostrar</h3>
+        <p class="card-body">Muchas organizaciones declaran la innovación como pilar. Egg la prueba: <strong>tecnología propia publicada en literatura científica</strong>, con 5 millones de sesiones de respaldo. No es un discurso — es un diferencial auditable.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ━━ 5 ━━ -->
+  <div class="slide s5" data-theme="dark">
+    <p class="eyebrow">Egg · 2026</p>
+    <h2 class="hl">Si esto resuena,<br><em>hablemos.</em></h2>
+    <a class="cta" href="mailto:mariana.herrera@egg.live">mariana.herrera@egg.live →</a>
+    <p class="footnote">Egg selecciona los proyectos con los que trabaja.<br>Buscamos organizaciones que entiendan que transformar personas<br>requiere rigor, no solo voluntad.</p>
+  </div>
+
+</div>
+
+<nav class="nav">
+  <button class="nav-btn" id="prevBtn">← Anterior</button>
+  <div class="dots" id="dots"></div>
+  <button class="nav-btn next" id="nextBtn">Siguiente →</button>
+</nav>
+
+<script>
+const slides  = Array.from(document.querySelectorAll('.slide'));
+const dotsEl  = document.getElementById('dots');
+const counter = document.getElementById('counter');
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+const N = slides.length;
+let idx = 0;
+
+slides.forEach((_,i)=>{
+  const d=document.createElement('div');
+  d.className='dot'+(i===0?' active':'');
+  d.addEventListener('click',()=>goTo(i));
+  dotsEl.appendChild(d);
+});
+
+function applyTheme(i){
+  const t=slides[i].dataset.theme;
+  counter.style.color=t==='dark'?'var(--grey-02)':'var(--beige-04)';
+}
+
+function goTo(n){
+  const prev=idx;
+  idx=((n%N)+N)%N;
+  if(prev===idx)return;
+  slides[prev].classList.add('exit');
+  slides[prev].classList.remove('active');
+  setTimeout(()=>slides[prev].classList.remove('exit'),280);
+  slides[idx].classList.add('active');
+  document.querySelectorAll('.dot').forEach((d,i)=>d.classList.toggle('active',i===idx));
+  counter.textContent=(idx+1)+' / '+N;
+  applyTheme(idx);
+  prevBtn.disabled=idx===0;
+  nextBtn.textContent=idx===N-1?'↩ Inicio':'Siguiente →';
+}
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='ArrowDown')goTo(idx+1);
+  if(e.key==='ArrowLeft' ||e.key==='ArrowUp')  goTo(idx-1);
+});
+prevBtn.addEventListener('click',()=>goTo(idx-1));
+nextBtn.addEventListener('click',()=>goTo(idx===N-1?0:idx+1));
+goTo(0);
+</script>
+</body>
+</html>
